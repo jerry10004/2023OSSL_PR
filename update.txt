@@ -1,0 +1,158 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+typedef struct{
+	char name[50];
+	int ex_date; // 유통기한
+	int ma_date; // 제조일자
+	int price; // 가격
+	int stock_num;// 물품 재고 수
+}Product;
+
+int createProduct(Product *p); //물품 추가
+void readProduct(Product p); //물품 조회
+int updateProduct(Product *p); //물품 정보 수정
+int deleteProduct(Product *p); //물품 삭제
+int listProduct(Product *s, int index);
+
+int selectMenu(); //번호
+
+
+int selectMenu(){
+        int menu;
+        printf("\n***제품관리***\n");
+        printf("1. 조회\n");
+        printf("2. 추가\n");
+        printf("3. 수정\n");
+        printf("4. 삭제\n");
+//        printf("5. 데이터 저장\n");
+//        printf("6. 제품검색\n");
+//        printf("7. 가격으로 검색\n");
+//        printf("8. 지역으로 검색\n");
+        printf("0. 종료\n");
+        printf("입력하시오 : ");
+        scanf("%d", &menu);
+        return menu;
+}
+
+int listProduct(Product *s, int index){
+        printf("\n*************************************");
+        for(int i=0; i<index; i++){
+                if(s[i].price == -1) continue;
+                printf("\n%2d 번 유통기한 제조일자 가격  재고수\n", i+1);
+                readProduct(s[i]);
+        }
+        printf("*************************************\n");
+}
+
+
+int createProduct(Product *p){
+	printf("\n");
+	printf("물품명 : ");
+	getchar();
+  fgets(p->name, 100, stdin);
+  p->name[strlen(p->name)-1]='\0';
+	
+	printf("물품 유통기한(ex220502) : ");
+	scanf("%d",&p->ex_date);
+
+	printf("물품 제조일자(ex220502) : ");
+	scanf("%d",&p->ma_date);
+
+	printf("물품 가격 : ");
+	scanf("%d",&p->price);
+
+	printf("물품 재고 개수 : ");
+	scanf("%d",&p->stock_num);
+
+	printf("==> 추가됨\n");
+	return 1;
+}
+
+void readProduct(Product p){
+	printf(" %s %d   %d   %d  %d\n", p.name, p.ex_date, p.ma_date, p.price, p.stock_num);
+}
+
+int updateProduct(Product *p){
+
+    printf("\n");
+    printf("물품명 : ");
+    getchar();
+    fgets(p->name, 100, stdin);
+    p->name[strlen(p->name)-1]='\0';
+
+    printf("물품 유통기한(ex220502) : ");
+    scanf("%d",&p->ex_date);
+
+    printf("물품 제조일자(ex220502) : ");
+    scanf("%d",&p->ma_date);
+
+    printf("물품 가격 : ");
+    scanf("%d",&p->price);
+    
+    printf("물품 재고 개수 : ");
+    scanf("%d",&p->stock_num);
+
+    printf("==> 추가됨\n");
+    return 1;
+}
+
+int deleteProduct(Product *p){
+    p->ex_date=-1;
+    p->ma_date=-1;
+    p->price=-1;
+    p->stock_num=-1;
+    printf("==> 삭제됨!\n");
+    return 0;
+}
+
+int main(void){
+        Product s[100];
+        int count=0,index=0,menu,num=0;
+
+        while(1){
+                menu = selectMenu();
+                if(menu == 0) break;
+                if(menu == 1){
+                        if(count==0) continue;
+                        else {
+                                listProduct(s,index);
+                        }
+                }
+                else if(menu ==2){
+                        count+=createProduct(&s[index++]);
+                }
+                else if(menu==3){
+                        int number;
+
+                        listProduct(s,index);
+                        printf("\n수정할 번호?(취소:0) : ");
+                        scanf("%d", &number);
+
+                        if(number==0){
+                        printf("=>취소됨");
+                        continue;
+                        }
+                        else updateProduct(&s[number-1]);
+                }
+                else if(menu==4){
+                        int number=0;
+
+                        listProduct(s,index);
+                        printf("\n삭제할 번호?(취소:0) : ");
+                        scanf("%d", &number);
+
+                        if(number==0) {
+                                printf("=>취소됨");
+                                continue;
+                        }
+                        else{
+                                deleteProduct(&s[number-1]);
+                                count-=1;
+                        }
+        	}
+	}
+  printf("종료됨!\n");
+  return 0;
+}
